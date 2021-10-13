@@ -6,20 +6,20 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Dashboard',
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  setup() {
-    const sayHi = () => {
-      alert('hi')
-    }
+<script lang="ts">
+import { defineComponent, getCurrentInstance } from 'vue'
 
-    return {
-      sayHi
+export default defineComponent({
+  name: 'Dashboard',
+  setup() {
+    const { proxy } = getCurrentInstance()!
+    const sayHi = () => {
+      // eslint-disable-next-line no-unused-expressions
+      proxy?.$message.success('hello! hi~')
     }
+    return { sayHi }
   }
-}
+})
 </script>
 
 <style lang="scss">
