@@ -7,7 +7,7 @@ import installElementPlus from './plugins/element'
 // 初始化css
 import 'normalize.css/normalize.css'
 // 全局样式
-import '@/style/index.scss'
+import '@/styles/index.scss'
 // svg icons
 import initSvgIcons from '@/icons/index'
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
