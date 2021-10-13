@@ -2,15 +2,19 @@
   <div class="sidebar-item-container">
 <!--    当一个路由下只有一个子路由，只渲染这个子路由-->
     <template v-if="theOnlyOneChildRoute && !theOnlyOneChildRoute.children">
-      <el-menu-item :index="resolvePath(theOnlyOneChildRoute.path)">
-        <svg-icon
-          v-if="icon"
-          class="menu-icon"
-          :icon-class="icon"></svg-icon>
-        <template #title>
-          <span>{{theOnlyOneChildRoute.meta.title}}</span>
-        </template>
-      </el-menu-item>
+      <sidebar-item-link
+        v-if="theOnlyOneChildRoute.meta"
+        :to="resolvePath(theOnlyOneChildRoute.path)">
+        <el-menu-item :index="resolvePath(theOnlyOneChildRoute.path)">
+          <svg-icon
+            v-if="icon"
+            class="menu-icon"
+            :icon-class="icon"></svg-icon>
+          <template #title>
+            <span>{{theOnlyOneChildRoute.meta.title}}</span>
+         </template>
+        </el-menu-item>
+      </sidebar-item-link>
     </template>
 
 <!--    当有多个子路由时-->
@@ -36,12 +40,15 @@
 </template>
 
 <script lang="ts">
+import path from 'path'
 import { computed, defineComponent, PropType, toRefs } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
-import path from 'path'
+import SidebarItemLink from './SidebarItemLink.vue'
+import { isExternal } from '@/utils/validate'
 
 export default defineComponent({
   name: 'SidebarItem',
+  components: { SidebarItemLink },
   props: {
     item: { // 当前路由（此时的父路由）
       type: Object as PropType<RouteRecordRaw>,
@@ -102,6 +109,11 @@ export default defineComponent({
     // 利用path.resolve 根据父路径+子路径 解析成正确路径 子路径可能是相对的
     // resolvePath在模板中使用
     const resolvePath = (childPath: string) => {
+      // 如果是带协议外链 直接返回
+      if (isExternal(childPath)) {
+        return childPath
+      }
+      // 如果不是外链 需要和basePath拼接
       return path.resolve(props.basePath, childPath)
     }
 
