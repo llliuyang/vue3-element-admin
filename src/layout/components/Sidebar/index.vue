@@ -1,16 +1,21 @@
 <template>
   <div>
-    <h8 @click="isCollapse=!isCollapse">colspan test</h8>
+    <h6 @click="isCollapse=!isCollapse">colspan test</h6>
     <el-menu
       class="sidebar-container-menu"
       mode="vertical"
+      router
       :default-active="activeMenu"
       :background-color="scssVariables.menuBg"
       :text-color="scssVariables.menuText"
       :active-text-color="scssVariables.menuActiveText"
       :collapse="isCollapse"
       :collapse-transition="true">
-      <sidebar-item />
+      <sidebar-item
+        v-for="route in menuRoutes"
+        :key="route.path"
+        :item="route"
+        :base-path="route.path" />
     </el-menu>
   </div>
 </template>
@@ -20,6 +25,8 @@ import { defineComponent, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 // 导入scss变量在组件中使用
 import variables from '@/styles/variables.scss'
+// 导入路由表
+import { routes } from '@/router'
 // el-menu-item封装组件
 import SidebarItem from './SidebarItem.vue'
 
@@ -37,12 +44,16 @@ export default defineComponent({
     })
     // scss 变量
     const scssVariables = computed(() => variables)
+    // 展开收起状态
     const isCollapse = ref(true)
+    // 渲染路由
+    const menuRoutes = computed(() => routes)
 
     return {
       scssVariables,
       isCollapse,
-      activeMenu
+      activeMenu,
+      menuRoutes
     }
   }
 })
