@@ -4,13 +4,14 @@
     class="sidebar-item-container">
 <!--    当一个路由下只有一个子路由，只渲染这个子路由-->
     <template
-      v-if="theOnlyOneChildRoute && (!theOnlyOneChildRoute.children || theOnlyOneChildRoute.noShowingChildren)">
+      v-if="theOnlyOneChildRoute && (!theOnlyOneChildRoute.children || noShowingChildren)">
       <sidebar-item-link
         v-if="theOnlyOneChildRoute.meta"
         :to="resolvePath(theOnlyOneChildRoute.path)">
         <el-menu-item :index="resolvePath(theOnlyOneChildRoute.path)">
+          <i v-if="icon && icon.includes('el-icon')" :class="icon"></i>
           <svg-icon
-            v-if="icon"
+            v-else-if="icon"
             class="menu-icon"
             :icon-class="icon"></svg-icon>
           <template #title>
@@ -26,18 +27,24 @@
       :index="resolvePath(item.path)"
       popper-append-to-body>
     <template #title>
+      <i
+        v-if="item.meta && item.meta.icon.includes('el-icon')"
+        :class="icon"
+      ></i>
       <svg-icon
-        v-if="item.meta.icon"
+        v-else-if="item.meta && item.meta.icon"
         class="menu-icon"
         :icon-class="item.meta.icon"></svg-icon>
-      <span class="submenu-title">{{item.meta.title}}</span>
+      <span v-if="item.meta" class="submenu-title">{{item.meta.title}}</span>
     </template>
-    <sidebar-item
-      v-for="child in item.children"
-      :key="child.path"
-      :is-nest="true"
-      :item="child"
-      :base-path="resolvePath(child.path)"></sidebar-item>
+    <template v-if="item.children">
+      <sidebar-item
+        v-for="child in item.children"
+        :key="child.path"
+        :is-nest="true"
+        :item="child"
+        :base-path="resolvePath(child.path)"></sidebar-item>
+    </template>
     </el-submenu>
   </div>
 </template>
@@ -45,16 +52,16 @@
 <script lang="ts">
 import path from 'path'
 import { computed, defineComponent, PropType, toRefs } from 'vue'
-import { RouteRecordRaw } from 'vue-router'
 import SidebarItemLink from './SidebarItemLink.vue'
 import { isExternal } from '@/utils/validate'
+import { MenuItemRouter } from '@/router/type'
 
 export default defineComponent({
   name: 'SidebarItem',
   components: { SidebarItemLink },
   props: {
     item: { // 当前路由（此时的父路由）
-      type: Object as PropType<RouteRecordRaw>,
+      type: Object as PropType<MenuItemRouter>,
       required: true
     },
     basePath: { // 父路由路径（子路由路径如果是相对的 要基于父路径）
@@ -99,15 +106,17 @@ export default defineComponent({
       // 没有可渲染children时，就渲染当前父路由item
       return {
         ...props.item,
-        path: '', // resolvePath避免resolve拼接时 拼接重复
-        noShowingChildren: true // 无可渲染chiildren
+        path: '' // resolvePath避免resolve拼接时 拼接重复
       }
     })
+
+    // 是否有可渲染子路由
+    const noShowingChildren = computed(() => showingChildNumber.value === 0)
 
     // menu icon
     const icon = computed(() => {
       // 子路由 如果没有icon就用父路由的
-      return theOnlyOneChildRoute.value?.meta?.icon || (props.item.meta && props.item.meta.icon)
+      return (theOnlyOneChildRoute.value?.meta?.icon || (props.item.meta && props.item.meta.icon)) as string
     })
 
     // 利用path.resolve 根据父路径+子路径 解析成正确路径 子路径可能是相对的
@@ -124,7 +133,8 @@ export default defineComponent({
     return {
       theOnlyOneChildRoute,
       icon,
-      resolvePath
+      resolvePath,
+      noShowingChildren
     }
   }
 })
