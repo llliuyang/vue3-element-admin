@@ -15,7 +15,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: 'Documentation',
           icon: 'documentation',
-          hidden: true
+          hidden: false
         }
       }
     ]
@@ -31,7 +31,8 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         component: () => import(/* webpackChunkName: "guide" */ '@/views/guide/index.vue'),
         meta: {
           title: 'Guide',
-          icon: 'guide'
+          icon: 'guide',
+          activeMenu: '/documentation/index'
         }
       }
     ]
