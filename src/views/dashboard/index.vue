@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Dashboard page</h1>
+    缓存测试 <input type="text">
     <svg-icon icon-class="bug"></svg-icon>
     <svg-icon icon-class="404" class-name="custom" @click="sayHi"></svg-icon>
   </div>
