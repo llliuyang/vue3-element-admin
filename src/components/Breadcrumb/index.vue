@@ -45,7 +45,7 @@ export default defineComponent({
       // 如果第一个匹配到的路由记录不是dashboard 我们自己就把它放在记录数组的第一项
       if (!isDashboard(first)) {
         matched = ([{
-          path: 'dashboard',
+          path: '/dashboard',
           meta: {
             title: 'Dashboard'
           }
