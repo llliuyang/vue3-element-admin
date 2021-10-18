@@ -1,14 +1,15 @@
 <template>
   <div class="navbar">
-    <hambuger @toggleClick="toggleSidebar" :is-active="true"/>
+    <hambuger @toggleClick="toggleSidebar" :is-active="sidebar.opened"/>
     <breadcrumb/>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
 import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import Hambuger from '@/components/Hambuger/index.vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   name: 'Navbar',
@@ -17,12 +18,15 @@ export default defineComponent({
     Breadcrumb
   },
   setup () {
+    const store = useStore()
     const toggleSidebar = () => {
-      console.log('click')
+      store.dispatch('app/toggleSidebar')
     }
+    const sidebar = computed(() => store.getters.sidebar)
 
     return {
-      toggleSidebar
+      toggleSidebar,
+      sidebar
     }
   }
 })
