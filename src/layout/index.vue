@@ -5,7 +5,7 @@
     </div>
     <div class="main-container">
       <div class="header">
-        <div class="navbar">navbar</div>
+        <navbar />
         <div class="tags-view">tagsview</div>
       </div>
       <app-main />
@@ -15,8 +15,9 @@
 <script lang="ts">
 import Sidebar from './components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain.vue'
+import Navbar from '@/layout/components/Navbar.vue'
 export default {
-  components: { AppMain, Sidebar }
+  components: { Navbar, AppMain, Sidebar }
 }
 </script>
 <style lang="scss" scoped>
@@ -29,11 +30,6 @@ export default {
     display: flex;
     flex-direction: column;
     .header {
-      background: cyan;
-      .navbar {
-        height: 50px;
-        background: #1890ff;
-      }
       .tags-view {
         height: 34px;
         background: #12efff;
