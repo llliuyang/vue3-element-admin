@@ -10,7 +10,11 @@ import {
   ElSubmenu,
   ElCol,
   ElBreadcrumb,
-  ElBreadcrumbItem
+  ElBreadcrumbItem,
+  ElTooltip,
+  ElDropdown,
+  ElDropdownMenu,
+  ElDropdownItem
 } from 'element-plus'
 import 'element-plus/lib/theme-chalk/index.css'
 // Element Plus 组件内部默认使用英语
@@ -36,7 +40,11 @@ export default (app: App): void => {
     ElSubmenu,
     ElCol,
     ElBreadcrumb,
-    ElBreadcrumbItem
+    ElBreadcrumbItem,
+    ElTooltip,
+    ElDropdown,
+    ElDropdownMenu,
+    ElDropdownItem
   ]
 
   // 注册组件
