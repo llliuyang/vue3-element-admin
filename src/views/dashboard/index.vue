@@ -2,6 +2,7 @@
   <div>
     <h1>Dashboard page</h1>
     缓存测试 <input type="text">
+    <el-button type="primary">size改变</el-button>
     <svg-icon icon-class="bug"></svg-icon>
     <svg-icon icon-class="404" class-name="custom" @click="sayHi"></svg-icon>
   </div>

@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store, { key } from './store'
 // element-plus
-import installElementPlus from './plugins/element'
+import installElementPlus, { Size } from './plugins/element'
 // 初始化css
 import 'normalize.css/normalize.css'
 // 全局样式
@@ -13,11 +13,12 @@ import initSvgIcons from '@/icons/index'
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 
 const app = createApp(App)
-installElementPlus(app)
+// 获取存储在store里的size
+const size = store.state.app.size
 app
   .use(store, key)
   .use(router)
-  .use(installElementPlus)
+  .use(installElementPlus, { size })
   .use(initSvgIcons)
   .mount('#app')
 
@@ -29,5 +30,8 @@ declare module '@vue/runtime-core' {
     $confirm: typeof ElMessageBox.confirm;
     $alert: typeof ElMessageBox.alert;
     $prompt: typeof ElMessageBox.prompt;
+    $ELEMENT: {
+      size: Size
+    }
   }
 }
