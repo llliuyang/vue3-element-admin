@@ -9,7 +9,8 @@
       <el-tooltip content="Global Size" effect="dark" placement="bottom">
         <size-select class="right-menu-item hover-effect"></size-select>
       </el-tooltip>
-
+      <!--      用户头像-->
+      <avatar />
     </div>
   </div>
 </template>
@@ -21,6 +22,7 @@ import Hambuger from '@/components/Hambuger/index.vue'
 import { useStore } from '@/store'
 import Screenfull from '@/components/Screenfull/index.vue'
 import SizeSelect from '@/components/SizeSelect/index.vue'
+import Avatar from './Avatar/index.vue'
 
 export default defineComponent({
   name: 'Navbar',
@@ -28,7 +30,8 @@ export default defineComponent({
     SizeSelect,
     Hambuger,
     Breadcrumb,
-    Screenfull
+    Screenfull,
+    Avatar
   },
   setup () {
     const store = useStore()
