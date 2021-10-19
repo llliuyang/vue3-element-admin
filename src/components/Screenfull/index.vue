@@ -14,7 +14,7 @@ export default defineComponent({
   name: 'ScreenFull',
   setup () {
     const { proxy } = getCurrentInstance()!
-    const isFullScreen = ref(false)
+    const isFullscreen = ref(false)
     const handleClick = () => {
       if (screenfull.isEnabled) {
         screenfull.toggle()
@@ -28,7 +28,7 @@ export default defineComponent({
 
     const change = () => {
       // 更新当前全屏状态 根据状态切换对应图标
-      isFullScreen.value = (screenfull as Screenfull).isFullscreen
+      isFullscreen.value = (screenfull as Screenfull).isFullscreen
     }
 
     const init = () => {
@@ -42,7 +42,7 @@ export default defineComponent({
     })
 
     return {
-      isFullScreen,
+      isFullscreen,
       handleClick
     }
   }
