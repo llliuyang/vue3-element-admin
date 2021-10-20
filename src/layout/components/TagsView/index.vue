@@ -22,7 +22,9 @@
               <el-dropdown-menu>
                 <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 <el-dropdown-item command="other">关闭其它</el-dropdown-item>
-                <el-dropdown-item command="self">关闭</el-dropdown-item>
+                <el-dropdown-item command="self"
+                                  v-if="!tag.meta || !tag.meta.affix">
+                  关闭</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -152,8 +154,17 @@ export default defineComponent({
     // 右键菜单
     const handleTagCommand = (command: TagCommandType, view: RouteLocationWithFullPath) => {
       switch (command) {
+        // 删除所有tag 除了affix为true的
         case TagCommandType.All:
           handleCloseAllTag(view)
+          break
+        // 关闭其他tag 除了affix为true的和当前右键的tag
+        case TagCommandType.Other:
+          handleCloseOtherTag(view)
+          break
+        // 关闭当前右键的tag affix为true的tag下拉菜单中无此项
+        case TagCommandType.Self:
+          closeSelectedTag(view)
       }
     }
 
@@ -164,6 +175,16 @@ export default defineComponent({
         toLastView(visitedTags.value, view)
       })
     }
+
+    // 删除其他tag 除了当前右键的tag
+    const handleCloseOtherTag = (view: RouteLocationWithFullPath) => {
+      store.dispatch('tagsView/delOthersViews', view).then(() => {
+        if (!isActive(view)) { // 删除其他tag后 让该view路由激活
+          router.push(view.path)
+        }
+      })
+    }
+
     return {
       visitedTags,
       isActive,

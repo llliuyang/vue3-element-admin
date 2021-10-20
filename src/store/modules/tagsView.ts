@@ -53,6 +53,14 @@ const mutations: MutationTree<ITagsViewState> = {
   // 清空缓存列表
   DEL_ALL_CACHED_VIEWS(state) {
     state.cachedViews = []
+  },
+  // 删除标签导航其他可显示tag 除了 affix为true 以及当前右键选中的view
+  DEL_OTHERS_VISITED_VIEWS(state, view: RouteRecordRaw) {
+    state.visitedViews = state.visitedViews.filter(tag => tag.meta.affix || (tag.path === view.path))
+  },
+  // 删除缓存列表里其他tag 除了当前右键选中的view
+  DEL_OTHERS_CACHED_VIEWS(state, view: RouteRecordRaw) {
+    state.cachedViews = state.cachedViews.filter(name => name !== view.name)
   }
 }
 
@@ -109,6 +117,17 @@ const actions: ActionTree<ITagsViewState, IRootState> = {
   // 清空缓存列表
   delAllCachedViews({ commit }) {
     commit('DEL_ALL_CACHED_VIEWS')
+  },
+  // 关闭其他tag
+  delOthersViews({ dispatch }, view: RouteRecordRaw) {
+    dispatch('delOthersVisitedViews', view)
+    dispatch('delOthersCachedViews', view)
+  },
+  delOthersVisitedViews({ commit }, view: RouteRecordRaw) {
+    commit('DEL_OTHERS_VISITED_VIEWS', view)
+  },
+  delOthersCachedViews({ commit }, view: RouteRecordRaw) {
+    commit('DEL_OTHERS_CACHED_VIEWS', view)
   }
 }
 
