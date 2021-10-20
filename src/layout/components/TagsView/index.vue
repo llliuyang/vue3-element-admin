@@ -19,13 +19,15 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, watch } from 'vue'
 import { useStore } from '@/store'
-import { RouteRecordRaw, useRoute } from 'vue-router'
+import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
+import { RouteLocationWithFullPath } from '@/store/modules/tagsView'
 
 export default defineComponent({
   name: 'TagsView',
   setup () {
     const store = useStore()
     const route = useRoute()
+    const router = useRouter()
     const visitedTags = computed(() => store.state.tagsView.visitedViews)
     // 添加tag
     const addedTags = () => {
@@ -44,14 +46,38 @@ export default defineComponent({
       addedTags()
     })
 
-    // 是否是当前应该激活的tag
+    // 当前是否是激活的tag
     const isActive = (tag: RouteRecordRaw) => {
       return tag.path === route.path
     }
 
+    // 删除后，让tagview集合中最后一个变为选中状态
+    const toLastView = (visitedViews: RouteLocationWithFullPath[], view: RouteLocationWithFullPath) => {
+      // 得到集合中最后一个项tag view 可能没有
+      const lastView = visitedViews[visitedViews.length - 1]
+      if (lastView) {
+        router.push(lastView.fullPath as string)
+      } else {
+        // 集合中没有tag view时
+        // 如果刚刚删除的正是Dashboard 就重定向回Dashboard（首页）
+        if (view.name === 'Dashboard') {
+          router.replace({ path: '/redirect' + view.fullPath as string })
+        } else {
+          // tag都没有了 删除的也不是Dashboard 只能跳转首页
+          router.push('/')
+        }
+      }
+    }
+
     // 关闭当前右键的tag路由
-    const closeSelectedTag = (view: RouteRecordRaw) => {
-      store.dispatch('tagsView/delView', view)
+    const closeSelectedTag = (view: RouteLocationWithFullPath) => {
+      // 关闭并移除view
+      store.dispatch('tagsView/delView', view).then(() => {
+        // 如果移除的view是当前选中状态view, 就让删除后的集合中最后一个tag view为选中态
+        if (isActive(view)) {
+          toLastView(visitedTags.value, view)
+        }
+      })
     }
 
     return {
@@ -70,6 +96,7 @@ export default defineComponent({
   background: #fff;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -83,16 +110,20 @@ export default defineComponent({
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
       &.active {
         background-color: #42b983;
         color: #fff;
         border-color: #42b983;
+
         &::before {
           position: relative;
           display: inline-block;
@@ -120,11 +151,13 @@ export default defineComponent({
     text-align: center;
     transition: all .3s cubic-bezier(.645, .045, .355, 1);
     transform-origin: 100% 50%;
+
     &:before {
       transform: scale(.6);
       display: inline-block;
       vertical-align: -1px;
     }
+
     &:hover {
       background-color: #b4bccc;
       color: #fff;
