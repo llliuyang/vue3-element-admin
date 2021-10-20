@@ -3,10 +3,12 @@ import app, { IAppState } from '@/store/modules/app'
 import { InjectionKey } from 'vue'
 import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
+import tagsView, { ITagsViewState } from '@/store/modules/tagsView'
 
 // 声明全局状态类型，主要就是我们定义的模块 这样store.state.app才会有类型提示
 export interface IRootState {
-  app: IAppState
+  app: IAppState,
+  tagsView: ITagsViewState
 }
 
 // 通过下面方式使用 TypeScript 定义 store 能在使用时正确地为 store 提供类型声明。
@@ -28,7 +30,8 @@ export default createStore<IRootState>({
   plugins: [persisteAppState],
   getters,
   modules: {
-    app
+    app,
+    tagsView
   }
 })
 
