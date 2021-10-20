@@ -9,9 +9,9 @@ export interface RouteLocationWithFullPath extends RouteRecordNormalized {
 
 export interface ITagsViewState {
   // 存放当前显示的tags view集合
-  visitedViews: RouteLocationWithFullPath[],
+  visitedViews: RouteLocationWithFullPath[];
   // 根据路由name缓存集合
-  cachedViews: RouteRecordName[]
+  cachedViews: RouteRecordName[];
 }
 
 // 定义mutations
@@ -40,6 +40,11 @@ const mutations: MutationTree<ITagsViewState> = {
       state.visitedViews.splice(i, 1)
     }
   },
+  // 可删除指定的一个view缓存
+  DEL_CACHED_VIEW(state, view) {
+    const index = state.cachedViews.indexOf(view.name)
+    index > -1 && state.cachedViews.splice(index, 1)
+  },
   // 清空缓存列表
   DEL_ALL_CACHED_VIEWS(state) {
     state.cachedViews = []
@@ -51,6 +56,7 @@ const actions: ActionTree<ITagsViewState, IRootState> = {
   // 添加tags view
   addView({ dispatch }, view: RouteRecordRaw) {
     // 添加tag时，也要判断是否缓存
+    dispatch('addVisitedView', view)
     dispatch('addCachedView', view)
   },
   // 添加可显示的tags view 添加前commit里需要进行去重过滤
@@ -77,7 +83,7 @@ const actions: ActionTree<ITagsViewState, IRootState> = {
   // 从缓存列表中删除view
   delCachedView({ commit }, view: RouteRecordRaw) {
     return new Promise((resolve) => {
-      commit('DEL_VISITED_VIEW', view)
+      commit('DEL_CATCHED_VIEW', view)
       resolve(null)
     })
   },
