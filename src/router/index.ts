@@ -15,7 +15,8 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
         meta: {
           title: 'Documentation',
           icon: 'documentation',
-          hidden: false
+          hidden: false,
+          noCache: false
         }
       }
     ]

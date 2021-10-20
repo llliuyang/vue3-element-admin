@@ -51,6 +51,8 @@ export default defineComponent({
 
     // 刷新当前路由
     const refreshView = () => {
+      // 需要清除路由缓存 否则size配置改变后组件size状态被缓存不更新
+      store.dispatch('tagsView/delAllCachedViews')
       const { fullPath } = route
       nextTick(() => {
         // 重定向到中间页 实现vue中当前路由刷新

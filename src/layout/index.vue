@@ -7,7 +7,6 @@
       <div class="header">
         <navbar/>
         <tags-view/>
-        <div class="tags-view">tagsview</div>
       </div>
       <app-main/>
     </div>
@@ -43,7 +42,7 @@ export default {
     .app-main {
       /* 50= navbar  50  如果有tagsview + 34  */
       min-height: calc(100vh - 84px);
-      background: red;
+      background: #fff;
     }
   }
 }

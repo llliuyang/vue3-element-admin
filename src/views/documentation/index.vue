@@ -1,5 +1,8 @@
 <template>
-<h1>Documentation page</h1>
+  <div>
+    <h1>Documentation page</h1>
+    缓存测试 <input type="text">
+  </div>
 </template>
 
 <script>
