@@ -1,19 +1,21 @@
 <template>
   <div class="tags-view-container">
-    <div class="tags-view-wrapper">
-      <!--      一个个tags view就是router-link-->
-      <router-link class="tags-view-item"
-                   :class="{active: isActive(tag)}"
-                   v-for="(tag,index) in visitedTags"
-                   :key="index"
-                   :to="{path: tag.path, query: tag.query, fullPath:tag.fullPath}"
-                   tag="span">
-        {{ tag.title }}
-        <!-- affix固定的路由tag是无法删除 -->
-        <span v-if="!isAffix(tag)" class="el-icon-close"
-              @click.prevent.stop="closeSelectedTag(tag)"></span>
-      </router-link>
-    </div>
+    <scroll-panel>
+      <div class="tags-view-wrapper">
+        <!--      一个个tags view就是router-link-->
+        <router-link class="tags-view-item"
+                     :class="{active: isActive(tag)}"
+                     v-for="(tag,index) in visitedTags"
+                     :key="index"
+                     :to="{path: tag.path, query: tag.query, fullPath:tag.fullPath}"
+                     tag="span">
+          {{ tag.title }}
+          <!-- affix固定的路由tag是无法删除 -->
+          <span v-if="!isAffix(tag)" class="el-icon-close"
+                @click.prevent.stop="closeSelectedTag(tag)"></span>
+        </router-link>
+      </div>
+    </scroll-panel>
   </div>
 </template>
 
@@ -24,9 +26,11 @@ import { RouteRecordRaw, useRoute, useRouter } from 'vue-router'
 import { RouteLocationWithFullPath } from '@/store/modules/tagsView'
 import { routes } from '@/router'
 import path from 'path'
+import ScrollPanel from '@/layout/components/TagsView/ScrollPanel.vue'
 
 export default defineComponent({
   name: 'TagsView',
+  components: { ScrollPanel },
   setup () {
     const store = useStore()
     const route = useRoute()
@@ -143,6 +147,7 @@ export default defineComponent({
   background: #fff;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  overflow: hidden;
 
   .tags-view-wrapper {
     .tags-view-item {
