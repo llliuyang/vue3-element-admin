@@ -1,4 +1,4 @@
-import { Module, ActionTree, MutationTree } from 'vuex'
+import { ActionTree, Module, MutationTree } from 'vuex'
 import { RouteRecordName, RouteRecordNormalized, RouteRecordRaw } from 'vue-router'
 import { IRootState } from '@/store'
 
@@ -45,6 +45,11 @@ const mutations: MutationTree<ITagsViewState> = {
     const index = state.cachedViews.indexOf(view.name)
     index > -1 && state.cachedViews.splice(index, 1)
   },
+  // 清空可显示列表
+  DEL_ALL_VISITED_VIEWS(state) {
+    // 对于affix为true的路由 tag view 是不能删除的
+    state.visitedViews = state.visitedViews.filter(tag => tag.meta.affix)
+  },
   // 清空缓存列表
   DEL_ALL_CACHED_VIEWS(state) {
     state.cachedViews = []
@@ -83,9 +88,23 @@ const actions: ActionTree<ITagsViewState, IRootState> = {
   // 从缓存列表中删除view
   delCachedView({ commit }, view: RouteRecordRaw) {
     return new Promise((resolve) => {
-      commit('DEL_CATCHED_VIEW', view)
+      commit('DEL_CACHED_VIEW', view)
       resolve(null)
     })
+  },
+  // 清空 可显示列表 和 缓存列表
+  delAllView({ dispatch }) {
+    return new Promise(resolve => {
+      // 删除显示的路由tag
+      dispatch('delAllVisitedView')
+      // 删除缓存的路由
+      dispatch('delAllCachedViews')
+      resolve(null)
+    })
+  },
+  // 清空可显示列表
+  delAllVisitedView({ commit }) {
+    commit('DEL_ALL_VISITED_VIEWS')
   },
   // 清空缓存列表
   delAllCachedViews({ commit }) {

@@ -9,10 +9,23 @@
                      :key="index"
                      :to="{path: tag.path, query: tag.query, fullPath:tag.fullPath}"
                      tag="span">
-          {{ tag.title }}
-          <!-- affix固定的路由tag是无法删除 -->
-          <span v-if="!isAffix(tag)" class="el-icon-close"
-                @click.prevent.stop="closeSelectedTag(tag)"></span>
+          <el-dropdown
+            trigger="contextmenu"
+            @command="command => handleTagCommand(command,tag)">
+            <span>
+              {{ tag.meta.title }}
+              <!-- affix固定的路由tag是无法删除 -->
+              <span v-if="!isAffix(tag)" class="el-icon-close"
+                  @click.prevent.stop="closeSelectedTag(tag)"></span>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+                <el-dropdown-item command="other">关闭其它</el-dropdown-item>
+                <el-dropdown-item command="self">关闭</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </router-link>
       </div>
     </scroll-panel>
@@ -27,6 +40,12 @@ import { RouteLocationWithFullPath } from '@/store/modules/tagsView'
 import { routes } from '@/router'
 import path from 'path'
 import ScrollPanel from '@/layout/components/TagsView/ScrollPanel.vue'
+
+enum TagCommandType {
+  All = 'all',
+  Other = 'other',
+  Self = 'self'
+}
 
 export default defineComponent({
   name: 'TagsView',
@@ -130,11 +149,27 @@ export default defineComponent({
       return tag.meta && tag.meta.affix
     }
 
+    // 右键菜单
+    const handleTagCommand = (command: TagCommandType, view: RouteLocationWithFullPath) => {
+      switch (command) {
+        case TagCommandType.All:
+          handleCloseAllTag(view)
+      }
+    }
+
+    const handleCloseAllTag = (view: RouteLocationWithFullPath) => {
+      // 对于是affix的tag是不会被删除的
+      store.dispatch('tagsView/delAllView').then(() => {
+        // 关闭所有后 就让切换到剩下affix中最后一个tag
+        toLastView(visitedTags.value, view)
+      })
+    }
     return {
       visitedTags,
       isActive,
       closeSelectedTag,
-      isAffix
+      isAffix,
+      handleTagCommand
     }
   }
 })
@@ -175,6 +210,11 @@ export default defineComponent({
         background-color: #42b983;
         color: #fff;
         border-color: #42b983;
+        ::v-deep {
+          .el-dropdown {
+            color: #fff
+          }
+        }
 
         &::before {
           position: relative;
