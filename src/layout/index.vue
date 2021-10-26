@@ -14,6 +14,7 @@
       v-model="showSetting"
       title="样式风格设置"
       :size="settingsPanelWidth">
+      <settings />
     </right-panel>
   </div>
 </template>
@@ -25,9 +26,11 @@ import Navbar from '@/layout/components/Navbar.vue'
 import TagsView from '@/layout/components/TagsView/index.vue'
 import RightPanel from '@/components/RightPanel/index.vue'
 import variables from '@/styles/variables.scss'
+import Settings from '@/components/Settings/index.vue'
 
 export default defineComponent({
   components: {
+    Settings,
     RightPanel,
     TagsView,
     Navbar,

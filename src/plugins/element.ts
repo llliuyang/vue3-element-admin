@@ -16,7 +16,8 @@ import {
   ElDropdownMenu,
   ElDropdownItem,
   ElScrollbar,
-  ElDrawer
+  ElDrawer,
+  ElColorPicker
 } from 'element-plus'
 import 'element-plus/lib/theme-chalk/index.css'
 // Element Plus 组件内部默认使用英语
@@ -51,7 +52,8 @@ export default (app: App, options: ElementOptions): void => {
     ElDropdownMenu,
     ElDropdownItem,
     ElScrollbar,
-    ElDrawer
+    ElDrawer,
+    ElColorPicker
   ]
 
   // 注册组件
