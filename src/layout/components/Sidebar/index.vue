@@ -1,20 +1,24 @@
 <template>
-  <div>
-    <el-menu
-      class="sidebar-container-menu"
-      mode="vertical"
-      :default-active="activeMenu"
-      :background-color="scssVariables.menuBg"
-      :text-color="scssVariables.menuText"
-      :active-text-color="themeColor"
-      :collapse="isCollapse"
-      :collapse-transition="true">
-      <sidebar-item
-        v-for="route in menuRoutes"
-        :key="route.path"
-        :item="route"
-        :base-path="route.path"/>
-    </el-menu>
+  <div class="sidebar-wrapper">
+    <logo v-if="showLogo" :collapse="isCollapse" />
+    <scroll-panel>
+      <el-menu
+        class="sidebar-container-menu"
+        :class="{ 'sidebar-show-logo': showLogo }"
+        mode="vertical"
+        :default-active="activeMenu"
+        :background-color="scssVariables.menuBg"
+        :text-color="scssVariables.menuText"
+        :active-text-color="themeColor"
+        :collapse="isCollapse"
+        :collapse-transition="true">
+        <sidebar-item
+          v-for="route in menuRoutes"
+          :key="route.path"
+          :item="route"
+          :base-path="route.path"/>
+      </el-menu>
+    </scroll-panel>
   </div>
 </template>
 
@@ -28,10 +32,14 @@ import { routes } from '@/router'
 // el-menu-item封装组件
 import SidebarItem from './SidebarItem.vue'
 import { useStore } from '@/store'
+import Logo from './Logo.vue'
+import ScrollPanel from '@/components/ScrollPanel/ScrollPanel.vue'
 
 export default defineComponent({
   name: 'Sidebar',
   components: {
+    ScrollPanel,
+    Logo,
     SidebarItem
   },
   setup () {
@@ -59,17 +67,27 @@ export default defineComponent({
     // 获取主题色
     const themeColor = computed(() => store.getters.themeColor)
 
+    const showLogo = computed(() => store.state.settings.sidebarLogo)
+
     return {
       scssVariables,
       isCollapse,
       activeMenu,
       menuRoutes,
-      themeColor
+      themeColor,
+      showLogo
     }
   }
 })
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.sidebar-wrapper {
+  .sidebar-container-menu {
+    height: 100vh;
+    &.sidebar-show-logo {
+      height: calc(100vh - 50px);
+    }
+  }
+}
 </style>
