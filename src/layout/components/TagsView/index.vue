@@ -5,6 +5,10 @@
         <!--      一个个tags view就是router-link-->
         <router-link class="tags-view-item"
                      :class="{active: isActive(tag)}"
+                     :style="{
+                        backgroundColor: isActive(tag) ? themeColor : '',
+                        borderColor: isActive(tag) ? themeColor : ''
+                     }"
                      v-for="(tag,index) in visitedTags"
                      :key="index"
                      :to="{path: tag.path, query: tag.query, fullPath:tag.fullPath}"
@@ -204,12 +208,16 @@ export default defineComponent({
       })
     }
 
+    // 获取主题色
+    const themeColor = computed(() => store.getters.themeColor)
+
     return {
       visitedTags,
       isActive,
       closeSelectedTag,
       isAffix,
-      handleTagCommand
+      handleTagCommand,
+      themeColor
     }
   }
 })

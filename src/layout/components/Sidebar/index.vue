@@ -6,7 +6,7 @@
       :default-active="activeMenu"
       :background-color="scssVariables.menuBg"
       :text-color="scssVariables.menuText"
-      :active-text-color="scssVariables.menuActiveText"
+      :active-text-color="themeColor"
       :collapse="isCollapse"
       :collapse-transition="true">
       <sidebar-item
@@ -56,11 +56,15 @@ export default defineComponent({
     // 渲染路由
     const menuRoutes = computed(() => routes)
 
+    // 获取主题色
+    const themeColor = computed(() => store.getters.themeColor)
+
     return {
       scssVariables,
       isCollapse,
       activeMenu,
-      menuRoutes
+      menuRoutes,
+      themeColor
     }
   }
 })
