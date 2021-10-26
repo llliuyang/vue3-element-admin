@@ -21,7 +21,7 @@ export default defineComponent({
     const defaultTheme = computed(() => store.state.settings.theme)
     const theme = ref('')
 
-    // 主题生成方法 先占位，稍后写
+    // 主题生成方法
     const { generateTheme } = useGenerateTheme()
 
     // 监听默认样式

@@ -30,9 +30,7 @@ const persisteAppState = createPersistedState({
 
 const persisteSettingsState = createPersistedState({
   storage: window.sessionStorage, // 指定storage 也可自定义
-  key: 'vuex_setting', // 存储名 默认都是vuex 多个模块需要指定 否则会覆盖
-  // paths: ['app'] // 针对app这个模块持久化
-  // 只针对app模块下sidebar.opened状态持久化
+  key: 'vuex_setting',
   paths: ['settings.theme', 'settings.originalStyle', 'settings.tagsView', 'settings.sidebarLogo'] // 通过点连接符指定state路径
 })
 
