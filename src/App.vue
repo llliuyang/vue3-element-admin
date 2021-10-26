@@ -1,14 +1,20 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue'
+import { useGenerateTheme } from '@/hooks/useGenerateTheme'
 
-export default {
-  name: 'App'
-}
+export default defineComponent({
+  name: 'App',
+  setup () {
+    // 根据此时store中主题色生成
+    useGenerateTheme()
+  }
+})
 </script>
 
 <style>

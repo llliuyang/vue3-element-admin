@@ -9,6 +9,7 @@
 <script lang="ts">
 import { computed, defineComponent, ref, watch } from 'vue'
 import { useStore } from '@/store'
+import { useGenerateTheme } from '@/hooks/useGenerateTheme'
 
 export default defineComponent({
   name: 'ThemePicker',
@@ -21,7 +22,7 @@ export default defineComponent({
     const theme = ref('')
 
     // 主题生成方法 先占位，稍后写
-    // const { generateTheme } = useGenerateTheme()
+    const { generateTheme } = useGenerateTheme()
 
     // 监听默认样式
     watch(defaultTheme, value => {
@@ -35,7 +36,7 @@ export default defineComponent({
       // 同步store
       store.dispatch('settings/changeSetting', { key: 'theme', value })
       // 根据theme选择变化 重新生成主题
-      // generateTheme(value)
+      generateTheme(value)
     })
 
     return {
