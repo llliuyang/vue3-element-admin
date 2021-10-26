@@ -6,7 +6,7 @@
     <div class="main-container">
       <div class="header">
         <navbar @showSetting="openSetting" />
-        <tags-view/>
+        <tags-view v-if="showTagsView" />
       </div>
       <app-main/>
     </div>
@@ -19,7 +19,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { computed, defineComponent, ref } from 'vue'
 import Sidebar from './components/Sidebar/index.vue'
 import AppMain from '@/layout/components/AppMain.vue'
 import Navbar from '@/layout/components/Navbar.vue'
@@ -27,6 +27,7 @@ import TagsView from '@/layout/components/TagsView/index.vue'
 import RightPanel from '@/components/RightPanel/index.vue'
 import variables from '@/styles/variables.scss'
 import Settings from '@/components/Settings/index.vue'
+import { useStore } from '@/store'
 
 export default defineComponent({
   components: {
@@ -38,15 +39,19 @@ export default defineComponent({
     Sidebar
   },
   setup() {
+    const store = useStore()
     const showSetting = ref(false)
     const openSetting = () => {
       showSetting.value = true
     }
 
+    const showTagsView = computed(() => store.state.settings.tagsView)
+
     return {
       showSetting,
       openSetting,
-      settingsPanelWidth: variables.settingPanelWidth
+      settingsPanelWidth: variables.settingPanelWidth,
+      showTagsView
     }
   }
 })

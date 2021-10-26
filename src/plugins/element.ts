@@ -17,7 +17,8 @@ import {
   ElDropdownItem,
   ElScrollbar,
   ElDrawer,
-  ElColorPicker
+  ElColorPicker,
+  ElSwitch
 } from 'element-plus'
 // 默认主题可以去掉，现在根据store里默认theme值生成内联css
 // 导入默认主题
@@ -56,7 +57,8 @@ export default (app: App, options: ElementOptions): void => {
     ElDropdownItem,
     ElScrollbar,
     ElDrawer,
-    ElColorPicker
+    ElColorPicker,
+    ElSwitch
   ]
 
   // 注册组件

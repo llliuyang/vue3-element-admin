@@ -4,12 +4,16 @@ import { IRootState } from '@/store'
 
 export interface ISettingsState {
   theme: string;
+  tagsView: boolean;
+  sidebarLogo: boolean;
   originalStyle: string;
 }
 
 // 定义state
 const state: ISettingsState = {
   theme: variables.theme,
+  tagsView: true,
+  sidebarLogo: true,
   originalStyle: '' // 保存element 主题样式文件内容 作为替换模板
 }
 
