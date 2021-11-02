@@ -54,7 +54,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { defineComponent, getCurrentInstance, onMounted, reactive, ref, toRefs } from 'vue'
 import { ElForm } from 'element-plus'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
@@ -70,6 +70,7 @@ export default defineComponent({
     const loginFormRef = ref<IElFormInstance | null>(null)
     const usernameRef = ref<HTMLInputElement | null>(null)
     const passwordRef = ref<HTMLInputElement | null>(null)
+    const { proxy } = getCurrentInstance()!
 
     const loginState = reactive({
       loginForm: {
@@ -105,6 +106,7 @@ export default defineComponent({
         if (valid) {
           loading.value = true
           store.dispatch('user/login', loginState.loginForm).then(() => {
+            proxy?.$message.success('登陆成功！')
             // 登录成功后跳转到之前访问的页面或者首页
             router.push({
               path: redirect.value || '/',

@@ -1,7 +1,7 @@
 import { Module, MutationTree, ActionTree } from 'vuex'
 import { IRootState } from '@/store'
 import { login } from '@/api/user'
-import { setToken } from '@/utils/auth'
+import { removeToken, setToken } from '@/utils/auth'
 
 // login params
 export interface IUserInfo {
@@ -34,10 +34,16 @@ const mutations: IMutations = {
 
 // 定义action
 const actions: IActions = {
-  login({ commit }, userInfo: IUserInfo) {
-    const { username, password } = userInfo
+  login ({ commit }, userInfo: IUserInfo) {
+    const {
+      username,
+      password
+    } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password }).then(response => {
+      login({
+        username: username.trim(),
+        password
+      }).then(response => {
         const { data } = response
         console.log('data', data)
         commit('SET_TOKEN', data.token)
@@ -46,6 +52,21 @@ const actions: IActions = {
       }).catch(error => {
         reject(error)
       })
+    })
+  },
+  logout ({
+    commit,
+    dispatch
+  }) {
+    // 退出登录接口我这里暂时未写
+    return new Promise<void>((resolve) => {
+      // 清空store里token
+      commit('SET_TOKEN', '')
+      // 清空localStorage里的token
+      removeToken()
+      // 清除所有tag views
+      dispatch('tagsView/delAllViews', null, { root: true })
+      resolve()
     })
   }
 }
