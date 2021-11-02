@@ -68,6 +68,16 @@ const actions: IActions = {
       dispatch('tagsView/delAllViews', null, { root: true })
       resolve()
     })
+  },
+  // 清空token
+  resetToken({ commit }) {
+    return new Promise<void>((resolve) => {
+      // 清空store里token
+      commit('SET_TOKEN', '')
+      // 清空localStorage里的token
+      removeToken()
+      resolve()
+    })
   }
 }
 
