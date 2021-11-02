@@ -2,6 +2,9 @@
   <div class="login-container">
     <el-form
       class="login-form"
+      :model="loginForm"
+      :rules="loginRules"
+      ref="loginFormRef"
     >
       <div class="admin-logo">
         <img class="logo" src="../../assets/logo.png" alt="logo">
@@ -12,18 +15,30 @@
           <svg-icon icon-class="user"></svg-icon>
         </span>
         <el-input
+          ref="usernameRef"
           placeholder="请输入用户名"
+          v-model="loginForm.username"
+          autocomplete="off"
+          tabindex="1"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password"></svg-icon>
         </span>
         <el-input
+          ref="passwordRef"
+          :class="{'no-autofill-pwd': passwordType === 'password'}"
           placeholder="请输入密码"
-          autocomplete="on"
-        />
+          v-model="loginForm.password"
+          type="text"
+          autocomplete="off"
+          tabindex="2" />
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon
+            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+        </span>
       </el-form-item>
 
       <!-- 登录按钮 -->
@@ -39,19 +54,69 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
+import { ElForm } from 'element-plus'
 
+type IElFormInstance = InstanceType<typeof ElForm>
 export default defineComponent({
   name: 'Login',
   setup () {
-    const loading = ref(false)
-    const handleLogin = () => {
-      console.log('login')
+    const loading = ref(false) // 加载登录状态
+    const loginFormRef = ref<IElFormInstance | null>(null)
+    const usernameRef = ref<HTMLInputElement | null>(null)
+    const passwordRef = ref<HTMLInputElement | null>(null)
+
+    const loginState = reactive({
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      loginRules: {
+        username: [{
+          required: true,
+          trigger: 'blur',
+          message: '请输入用户名'
+        }],
+        password: [{
+          required: true,
+          trigger: 'blur',
+          message: '请输入密码'
+        }]
+      },
+      passwordType: 'password'
+    })
+
+    // 显示密码？
+    const showPwd = () => {
+      loginState.passwordType = loginState.passwordType === 'password' ? 'text' : 'password'
     }
+
+    // 登录
+    const handleLogin = () => {
+      (loginFormRef.value as IElFormInstance).validate((valid) => {
+        if (valid) {
+          console.log(loginState.loginForm)
+        }
+      })
+    }
+
+    // 自动获取焦点
+    onMounted(() => {
+      if (loginState.loginForm.username === '') {
+        (usernameRef.value as HTMLInputElement).focus()
+      } else if (loginState.loginForm.password === '') {
+        (passwordRef.value as HTMLInputElement).focus()
+      }
+    })
 
     return {
       loading,
-      handleLogin
+      loginFormRef,
+      handleLogin,
+      showPwd,
+      usernameRef,
+      passwordRef,
+      ...toRefs(loginState)
     }
   }
 })
@@ -82,6 +147,11 @@ $cursor: #fff;
       }
     }
   }
+  .no-autofill-pwd { // 解决自动填充问题
+    .el-input__inner { // 模仿密码框原点
+      -webkit-text-security: disc !important;
+    }
+  }
 }
 </style>
 
@@ -106,6 +176,15 @@ $light_gray: #eee;
     padding: 140px 35px 0;
     overflow: hidden;
     box-sizing: border-box;
+
+    .svg-container {
+      padding: 0 10px;
+    }
+    .show-pwd {
+      font-size: 16px;
+      cursor: pointer;
+      margin-left: 7px;
+    }
 
     .admin-logo {
       display: flex;
