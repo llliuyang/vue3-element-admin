@@ -56,11 +56,15 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref, toRefs } from 'vue'
 import { ElForm } from 'element-plus'
+import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
 
 type IElFormInstance = InstanceType<typeof ElForm>
 export default defineComponent({
   name: 'Login',
   setup () {
+    const store = useStore()
+    const router = useRouter()
     const loading = ref(false) // 加载登录状态
     const loginFormRef = ref<IElFormInstance | null>(null)
     const usernameRef = ref<HTMLInputElement | null>(null)
@@ -95,7 +99,16 @@ export default defineComponent({
     const handleLogin = () => {
       (loginFormRef.value as IElFormInstance).validate((valid) => {
         if (valid) {
-          console.log(loginState.loginForm)
+          loading.value = true
+          store.dispatch('user/login', loginState.loginForm).then(() => {
+            router.push({
+              path: '/'
+            })
+          }).finally(() => {
+            loading.value = false
+          })
+        } else {
+          console.log('error submit!!!')
         }
       })
     }

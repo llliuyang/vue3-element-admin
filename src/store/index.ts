@@ -5,10 +5,12 @@ import getters from './getters'
 import createPersistedState from 'vuex-persistedstate'
 import tagsView, { ITagsViewState } from '@/store/modules/tagsView'
 import settings, { ISettingsState } from '@/store/modules/settings'
+import user, { IUserState } from '@/store/modules/user'
 
 // 声明全局状态类型，主要就是我们定义的模块 这样store.state.app才会有类型提示
 export interface IRootState {
   app: IAppState,
+  user: IUserState,
   tagsView: ITagsViewState,
   settings: ISettingsState,
 }
@@ -39,6 +41,7 @@ export default createStore<IRootState>({
   getters,
   modules: {
     app,
+    user,
     tagsView,
     settings
   }
